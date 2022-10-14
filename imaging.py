@@ -1,6 +1,9 @@
+''' Gopal Krishna
+10/13/2022
+CS 7180 Advanced Perception '''
+
 import cv2
 import numpy as np
-
 
 def resize_image(img, maxwh = 1200):
     """

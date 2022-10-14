@@ -1,15 +1,13 @@
+''' Gopal Krishna
+10/13/2022
+CS 7180 Advanced Perception '''
+
 import glob
 import numpy as np
 from scipy.io import loadmat
 
 def get_images_fullpath(img_folder_path):
     """ get all the images for the specified folder
-
-    Args:
-        img_folder_path (str): path which contains the images
-        img_file_format (str): image file format
-    Returns:
-        images_fullpath (list):  list of image (full) paths
     """
 
     images_fullpath = glob.glob(img_folder_path + "**/*.png", recursive=True)
@@ -18,11 +16,6 @@ def get_images_fullpath(img_folder_path):
 
 def load_groundtruth_illuminant(file_path):
     """ load ground truth illuminant
-
-    Args:
-        file_path (str): path which contains the ground truth illuminant values
-    Returns:
-        real_rgb (np.array):  ground truth illuminant values
     """
 
     real_illum_568 = loadmat(file_path)

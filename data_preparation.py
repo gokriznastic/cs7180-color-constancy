@@ -1,25 +1,12 @@
+''' Gopal Krishna
+10/13/2022
+CS 7180 Advanced Perception '''
+
 import numpy as np
 import cv2
 import configparser
 from imaging import hist_stretch, resize_image
 from utils import get_images_fullpath, load_groundtruth_illuminant
-
-# def roipoly(img, c, r):
-#     """
-#     Specify polygonal region of interest (ROI).
-
-#     Args:
-#         img (np.array): Input image
-#         c (list): x-coordinate of polygon vertices
-#         r (list): y-coordinate of polygon vertices
-#     Returns:
-#         mask (np.array): binary mask
-#     """
-
-#     mask = np.zeros(img.shape[:2], dtype='uint8')
-#     rc = np.column_stack((c,r))
-#     cv2.drawContours(mask, [rc.astype(int)], 0, 255, -1)
-#     return mask.astype(bool)
 
 
 def generate_patch_corner_positions(row, col, patch_size):
@@ -48,26 +35,6 @@ def generate_patch_corner_positions(row, col, patch_size):
     patch_corners = np.column_stack((xv.flatten(), yv.flatten()))
     return patch_corners
 
-# def remove_patches_overlapping_mcc(patch_corners, mcc_mask, patch_size, max_overlapping=0):
-#     """
-#     Remove patches that overlap with the macbeth color checker (mcc)
-
-#     Args:
-#         patch_corners (list): Upper left position of the patches
-#         mcc_mask (np.array): mask array of macbeth color checker
-#         patch_size (int): patch size
-#         max_overlapping (float): upper limit of overlapping percentage with the mcc
-#     Returns:
-#         filtered_patch_corners (list): Filtered upper left position (corner) of the patches
-#     """
-
-#     filtered_patch_corners = []
-#     for patch_corner in patch_corners:
-#         r, c = patch_corner
-#         if np.sum(mcc_mask[r:r + patch_size, c:c + patch_size]) <= max_overlapping * patch_size * patch_size:
-#             filtered_patch_corners.append(patch_corner)
-#     filtered_patch_corners = np.asarray(filtered_patch_corners)
-#     return filtered_patch_corners
 
 def select_most_brightest_patches(img, patch_corners, npatches_per_image, patch_size):
     """
@@ -113,6 +80,7 @@ def normalize_patches(patches):
     normalized_patches = np.reshape(normalized_patches, (npatches, patch_size, patch_size, nchannels))
     return normalized_patches
 
+
 def get_shigehler_patch_corners(shigehler_config):
     """
     Wrapper function to compute corners of patches for ShiGehler dataset
@@ -148,16 +116,7 @@ def get_shigehler_patch_corners(shigehler_config):
         nrow, ncol, _ = img.shape
         img_name = img_fullpath.split('/')[-1].split('.')[0]
 
-        # mask out the colorchecker within the image scene
-        # cc_coord = np.loadtxt(mcc_coordinate_path + img_name + cc_file_extension)
-        # scale = cc_coord[0][[1, 0]] / np.array([nrow, ncol])
-        # if remove_mask:
-        #     mask = roipoly(img, cc_coord[[2, 4, 5, 3], 0] / scale[0], cc_coord[[2, 4, 5, 3], 1] / scale[1])
-        # else:
-        #     mask = np.zeros(img.shape[:2])
         patch_corners = generate_patch_corner_positions(nrow, ncol, patch_size)
-        # don't take patches from the macbeth color checker
-        # patch_corners = remove_patches_overlapping_mcc(patch_corners, mask, patch_size)
         # select the most brightest patches
         patch_corners = select_most_brightest_patches(img, patch_corners, npatches_per_image, patch_size)
         image_idx_and_grid = np.column_stack([idx_image * np.ones((patch_corners.shape[0], 1)), patch_corners])
